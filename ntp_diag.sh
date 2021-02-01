@@ -1,4 +1,5 @@
 #!/bin/bash
+#kaka
 
 SERVER="192.36.143.130"
 OUT="/tmp/timediff1.csv"
