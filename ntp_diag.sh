@@ -1,8 +1,11 @@
 #!/bin/bash
-#kaka
 
+INTERVAL=2
 SERVER="192.36.143.130"
 OUT="/tmp/timediff1.csv"
+YEAR=echo date +"%Y"
+
+echo $YEAR
 
 get_ntp_time () {
     printf "$(date +%Y-%m-%d), $(date +%T:%N), " >> $OUT
@@ -16,9 +19,9 @@ log_to_file () {
         echo "Local Date, Local Timestamp, NTP-date, NTP-time, server, offset" > $OUT
         get_ntp_time >> $OUT
     else
-        #echo "$OUT exists."
+        #echo "$OUT exists.""
         get_ntp_time >> $OUT    
     fi
 }
 
-while true; do log_to_file; sleep 2; done
+#while true; do log_to_file; sleep $INTERVAL; done
