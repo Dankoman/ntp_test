@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # Tidsintervall mellan förfråningar.
-INTERVAL=1
+INTERVAL=4
 
 # Körtid i minuter
-DURATION=2
+DURATION=1
 
 # Tidsserver att ställa frågor mot.
 SERVER="192.36.143.130"
