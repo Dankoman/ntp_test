@@ -42,22 +42,12 @@ log_to_file () {
     fi
 }
 
-echo "Frågar "$SERVER" var "$INTERVAL" sekund."
+echo "Frågar "$SERVER" med intervall på "$INTERVAL" sekunder."
 echo "Sparar till:" $OUT. 
 echo "Avbryt körning med Ctrl+C"
 echo ""
 
 # Oändlig loop som kör log_to_file med givet intervall.
-
-
-#while [ i -le 5 ]
-#do 
-#    log_to_file
-#    let i=i++
-#    sleep $INTERVAL
-
-#echo $i
-#done
 i=1
 while [ $i -le $loops ]
 do
