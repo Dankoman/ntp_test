@@ -10,7 +10,7 @@ DURATION=1
 SERVER="192.36.143.130"
 
 # Fulständig sökväg till output fil. Om filen inte finns skapas den annars fylls befintlig fil på.
-OUT="/tmp/timediff_10.csv"
+OUT="/tmp/timediff_11.csv"
 
 # Plockar ut aktuellt år eftersom ntpdate endast använder Amerikanskt datumformat utan år.
 YEAR=`date +"%Y"`
