@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Tidsintervall mellan förfråningar.
-INTERVAL=4
+INTERVAL=2
 
 # Körtid i minuter
 DURATION=1
@@ -10,7 +10,7 @@ DURATION=1
 SERVER="192.36.143.130"
 
 # Fulständig sökväg till output fil. Om filen inte finns skapas den annars fylls befintlig fil på.
-OUT="/tmp/timediff1.csv"
+OUT="/tmp/timediff_10.csv"
 
 # Plockar ut aktuellt år eftersom ntpdate endast använder Amerikanskt datumformat utan år.
 YEAR=`date +"%Y"`
@@ -24,12 +24,12 @@ let end=$loops+1
 
 # Funktion för att ställa fråga mot angiven tidsserver, samt trimma ner output till intressant data.
 get_ntp_time () {
-    printf "$(date +%Y-%m-%d), $(date +%T:%N), " >> $OUT
+    ##printf "$(date +%Y-%m-%d), $(date +%T:%N), " >> $OUT
 
     #ska byta till den här ntpdate -q ntp.ubuntu.com|grep -v "^server "
     RawOutput=$(ntpdate -q $SERVER)
 
-    echo $RawOutput | sed 's/,//' |awk  -vyr="$YEAR" -vts="$TIMESTAMP" -F " "  '{ print ts",",$2",",$4,$6,$8,yr" "$9" "$10" "$11}'
+    echo $RawOutput | sed 's/,//' |awk  -vyr="$YEAR" -vts="$TIMESTAMP" -F " "  '{ print $2", "ts",",$9 " " $10 " " yr", "$11 ",",$4 ,$6 ,$8}'#>>$OUT
     #ntpdate -q $SERVER | grep -v "ntpdate" | awk  -vyr="$TIMESTAMP" -F " "  '{ print yr",",$3",",$8",",$10 }'
 }
 
@@ -38,7 +38,7 @@ log_to_file () {
     # Om filen saknas skapas den, och kollumnrubriker skrivs.
     if [ ! -f "$OUT" ]; then
         touch $OUT
-        echo 'Local Date, Local Timestamp, NTP-date, NTP-time, server, offset, STD,"=STDEV(F2:F'$end')" ' > $OUT
+        echo 'Server, Local Date, Local Timestamp, Server date, Server time, Stratum, Offset, Delay, Offset STD, "=STDEV(G2:G'$end')", Delay STD, "=STDEV(H2:H'$end')" ' > $OUT
 
         
         get_ntp_time >> $OUT
@@ -58,11 +58,11 @@ i=1
 while [ $i -le $loops ]
 do
 
-  #echo -e '\e[1A\e[KFråga' $i'/'$loops
+  echo -e '\e[1A\e[KFråga' $i'/'$loops
   
-  #echo "Fråga" $i "av" $loops
-  #log_to_file
-  get_ntp_time
+  #get_ntp_time
+  log_to_file
+  
   sleep $INTERVAL
   i=$(( $i + 1 ))
 done
