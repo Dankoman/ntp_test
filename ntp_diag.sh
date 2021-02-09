@@ -14,6 +14,7 @@ OUT="/tmp/timediff1.csv"
 
 # Plockar ut aktuellt år eftersom ntpdate endast använder Amerikanskt datumformat utan år.
 YEAR=`date +"%Y"`
+TIMESTAMP=`date +"%Y-%m-%d, %T"`
 
 let loops=($DURATION*60)/$INTERVAL
 let end=$loops+1
@@ -24,7 +25,12 @@ let end=$loops+1
 # Funktion för att ställa fråga mot angiven tidsserver, samt trimma ner output till intressant data.
 get_ntp_time () {
     printf "$(date +%Y-%m-%d), $(date +%T:%N), " >> $OUT
-    ntpdate -q $SERVER | grep -v "^server " | awk  -vyr="$YEAR" -F " "  '{ print $1,$2,yr",",$3",",$8",",$10 }'
+
+    #ska byta till den här ntpdate -q ntp.ubuntu.com|grep -v "^server "
+    RawOutput=$(ntpdate -q $SERVER)
+
+    echo $RawOutput | sed 's/,//' |awk  -vyr="$YEAR" -vts="$TIMESTAMP" -F " "  '{ print ts",",$2",",$4,$6,$8,yr" "$9" "$10" "$11}'
+    #ntpdate -q $SERVER | grep -v "ntpdate" | awk  -vyr="$TIMESTAMP" -F " "  '{ print yr",",$3",",$8",",$10 }'
 }
 
 # Funktion för att skriva output till fil
@@ -52,10 +58,11 @@ i=1
 while [ $i -le $loops ]
 do
 
-  echo -e '\e[1A\e[KFråga' $i'/'$loops
+  #echo -e '\e[1A\e[KFråga' $i'/'$loops
   
   #echo "Fråga" $i "av" $loops
-  log_to_file
+  #log_to_file
+  get_ntp_time
   sleep $INTERVAL
   i=$(( $i + 1 ))
 done
